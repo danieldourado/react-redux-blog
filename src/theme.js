@@ -2,10 +2,10 @@ import { createMuiTheme, responsiveFontSizes } from "@material-ui/core";
 
 const theme = createMuiTheme({
   palette: {
-    type: 'dark',
+    type: 'light',
     primary: {
       // light: will be calculated from palette.primary.main,
-      main: '#333',
+      main: '#fafafa',
       // dark: will be calculated from palette.primary.main,
       // contrastText: will be calculated to contrast with palette.primary.main
     },
