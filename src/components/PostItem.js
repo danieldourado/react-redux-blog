@@ -9,7 +9,9 @@ import { startSetPosts } from "../actions/posts";
 import Container from '@material-ui/core/Container'
 import Avatar from '@material-ui/core/Avatar'
 import CardHeader from '@material-ui/core/CardHeader'
-
+import Paper from '@material-ui/core/Paper'
+import Typography from '@material-ui/core/Typography';
+import LinearProgress from '@material-ui/core/LinearProgress';
 export class PostItem extends React.Component {
   constructor(props) {
     super(props);
@@ -45,40 +47,32 @@ export class PostItem extends React.Component {
   renderPost() {
     if (this.props.post) {
       return (
-        <Container maxWidth="md" id="header">
-        <CardHeader
-        avatar={
-          <Avatar aria-label="recipe" src={"https://i.pravatar.cc/60?u="+this.props.post.topic_data.author}/>
-        }
-        title={this.props.post.topic_data.author}
-        subheader={moment.unix(this.props.post.topic_data.created_utc).format("MMMM YYYY")}
-      />
-          <div>
-            <h2>{this.props.post.name}</h2>
-            <p className="text-muted">
-              Posted by {this.props.post.topic_data.author} on{" "}
-              {moment.unix(this.props.post.topic_data.created_utc).format("MMMM Do YYYY")}.
-            </p>
+        <Container maxWidth="md" id="header" style={{padding:"32px"}}>
+          <Paper elevation={3} style={{margin:"16px"}}>
+            <CardHeader
+              avatar={<Avatar aria-label="recipe" src={"https://i.pravatar.cc/60?u="+this.props.post.topic_data.author}/>}
+              title={this.props.post.topic_data.author}
+              subheader={moment.unix(this.props.post.topic_data.created_utc).format("MMMM YYYY")}
+            />
+            <Typography style={{margin:"16px", marginTop:"0px"}} component="h2" variant="h5">{this.props.post.name}</Typography>
+            
             {this.renderMainImage(this.props.post.topic_data)}
-            <p>{this.props.post.topic_data.body}</p>
-          </div>
-          <CommentBox
-            id={this.props.post.id}
-            comments={this.props.post.comments_data}
-          />
+            
+            <Typography variant="body2" color="textSecondary" component="p">
+              {this.props.post.topic_data.body}
+            </Typography>
+            
+            <CommentBox
+              id={this.props.post.id}
+              comments={this.props.post.comments_data}
+            />
+            </Paper>
         </Container>
+        
       );
     }
     return (
-      <div className="container post-item">
-        <div className="alert alert-danger" role="alert">
-          Could not retrieve post...
-          <Link to="/" className="alert-link">
-            Click here
-          </Link>{" "}
-          to go back to dashboard.
-        </div>
-      </div>
+      <LinearProgress/>
     );
   }
   render() {

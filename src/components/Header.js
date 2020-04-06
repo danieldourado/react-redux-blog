@@ -10,7 +10,7 @@ export default class Header extends React.Component {
   const appName = process.env.REACT_APP_NAME
     return (
       <React.Fragment>
-        <AppBar position="relative">
+        <AppBar position="relative" color="primary">
           <Toolbar>
             <Typography 
               component="h2"
