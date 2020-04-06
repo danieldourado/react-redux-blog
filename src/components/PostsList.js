@@ -1,10 +1,11 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import moment from 'moment';
-
 import { startSetPosts } from '../actions/posts';
-import { sortPostsByDate } from '../selectors/posts';
+import PostCard from './PostCard'
+import Container from '@material-ui/core/Container'
+import LinearProgress from '@material-ui/core/LinearProgress';
+
+import Grid from '@material-ui/core/Grid';
 
 export class PostsList extends React.Component {
   constructor(props) {
@@ -13,16 +14,38 @@ export class PostsList extends React.Component {
     this.state = {
       error: ''
     };
+    
+    this.trackScrolling = this.trackScrolling.bind(this)
   }
   async componentDidMount() {
     try {
-      if (this.props.posts.length === 0) {
+      if (!this.props.posts.list) {
         await this.props.startSetPosts();
       }
     } catch (e) {
       this.setState({ error: e.message });
     }
   }
+  
+  componentWillUpdate(){
+    document.addEventListener('scroll', this.trackScrolling);
+  }
+  
+  componentWillUnmount() {
+    document.removeEventListener('scroll', this.trackScrolling);
+  }
+  
+  async trackScrolling(){
+    const wrappedElement = document.getElementById('header');
+    const ammount = wrappedElement.getBoundingClientRect().bottom*0.5
+    if (ammount <= window.innerHeight) 
+    {
+      document.removeEventListener('scroll', this.trackScrolling);
+      await this.props.startSetPosts(this.props.currentPage+1);
+    }
+  };
+  
+  
   handleFetchStatus = () => {
     if (this.state.error) {
       return (
@@ -32,73 +55,37 @@ export class PostsList extends React.Component {
       );
     } else {
       return (
-        <div className="loader-container">
-          <p className="text-monospace loading-text text-center">
-            Fetching posts...
-          </p>
-          <p className="text-monospace loading-text text-center">
-            Please wait...
-          </p>
-        </div>
+        <LinearProgress/>
       );
     }
   };
   renderThumbnail(post) {
-    if (post.thumbnail) {
-      return <img src={post.thumbnail} className="img-fluid" />;
+    if (post.topic_data.thumbnail) {
+      return <img src={post.topic_data.thumbnail} alt="" className="img-fluid" />;
     }
   }
   render() {
     return (
-      <div className="container">
-        <div className="row">
-          <div className="col">
-            <div className="card-columns">
-              {this.props.posts.length >= 1
-                ? this.props.posts.map(post => {
-                    return (
-                      <div key={post._id} className="card">
-                        {this.renderThumbnail(post)}
-                        <div className="card-body">
-                          <h4 className="card-title">{post.title}</h4>
-                          <h6 className="card-subtitle text-muted mb-3">
-                            Posted by {post.author} on{' '}
-                            {moment(post.createdAt).format('MMM Do YYYY')}
-                          </h6>
-                          <p className="card-text">
-                            {post.body.substring(0, 120) + '...'}
-                          </p>
-                          <span className="badge badge-info">
-                            {post.category}
-                          </span>
-                        </div>
-                        <div className="card-footer bg-white">
-                          <Link
-                            to={`posts/${post._id}`}
-                            key={post._id}
-                            className="btn btn-outline-primary"
-                          >
-                            Read More
-                          </Link>
-                        </div>
-                      </div>
-                    );
-                  })
-                : this.handleFetchStatus()}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+      <Container style={{paddingTop:"32px"}} maxWidth="md" id="header">
+        <Grid container spacing={4}>
+          {this.props.posts.length >= 2 ? this.props.posts.map(post => (
+              <PostCard post={post} key={post.id} />
+            )
+          ): this.handleFetchStatus()}
+        </Grid>
+      </Container>
+      )
   }
 }
 
 const mapStateToProps = state => ({
-  posts: sortPostsByDate(state.posts)
+  posts: state.posts.list,
+  currentPage: state.posts.currentPage
 });
 
 const mapDispatchToProps = dispatch => ({
-  startSetPosts: () => dispatch(startSetPosts())
+  startSetPosts: (page) => dispatch(startSetPosts(page))
+  
 });
 
 export default connect(

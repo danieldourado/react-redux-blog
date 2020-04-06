@@ -7,6 +7,7 @@ export const sortPostsByDate = postsArray => {
     if (a.createdAt < b.createdAt) {
       return 1;
     }
+    return 0
   });
 };
 
@@ -19,5 +20,6 @@ export const sortCommentsByDate = commentsArray => {
     if (a.createdAt < b.createdAt) {
       return 1;
     }
+    return 0
   });
 };

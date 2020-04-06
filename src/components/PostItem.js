@@ -2,10 +2,13 @@ import React from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import moment from "moment";
-
+import CardMedia from '@material-ui/core/CardMedia';
 import Header from "./Header";
 import CommentBox from "./CommentBox";
 import { startSetPosts } from "../actions/posts";
+import Container from '@material-ui/core/Container'
+import Avatar from '@material-ui/core/Avatar'
+import CardHeader from '@material-ui/core/CardHeader'
 
 export class PostItem extends React.Component {
   constructor(props) {
@@ -25,47 +28,45 @@ export class PostItem extends React.Component {
       }
     }
   }
-  renderEditButton() {
-    if (this.props.auth.role === "admin") {
-      return (
-        <Link
-          to={`/posts/${this.props.post._id}/edit`}
-          className="btn btn-dark btn-md float-right"
-        >
-          <i className="far fa-edit" /> Edit
-        </Link>
-      );
-    }
-  }
+  
   renderMainImage(post) {
-    if (post.mainImage) {
+    if (post.image) {
       return (
-        <img
-          src={post.mainImage}
-          className="img-fluid rounded float-left mr-3 mb-3 d-none d-md-inline-block w-50"
-        />
+        <a href={post.image} target="_blank">
+          <CardMedia
+          image={post.image}
+          style={{height:640}}
+          />
+        </a>
       );
     }
   }
+  
   renderPost() {
     if (this.props.post) {
       return (
-        <div className="container post-item">
+        <Container maxWidth="md" id="header">
+        <CardHeader
+        avatar={
+          <Avatar aria-label="recipe" src={"https://i.pravatar.cc/60?u="+this.props.post.topic_data.author}/>
+        }
+        title={this.props.post.topic_data.author}
+        subheader={moment.unix(this.props.post.topic_data.created_utc).format("MMMM YYYY")}
+      />
           <div>
-            {this.renderEditButton()}
-            <h2>{this.props.post.title}</h2>
+            <h2>{this.props.post.name}</h2>
             <p className="text-muted">
-              Posted by {this.props.post.author} on{" "}
-              {moment(this.props.post.createdAt).format("MMMM Do YYYY")}.
+              Posted by {this.props.post.topic_data.author} on{" "}
+              {moment.unix(this.props.post.topic_data.created_utc).format("MMMM Do YYYY")}.
             </p>
-            {this.renderMainImage(this.props.post)}
-            <p>{this.props.post.body}</p>
+            {this.renderMainImage(this.props.post.topic_data)}
+            <p>{this.props.post.topic_data.body}</p>
           </div>
           <CommentBox
-            id={this.props.post._id}
-            comments={this.props.post.comments}
+            id={this.props.post.id}
+            comments={this.props.post.comments_data}
           />
-        </div>
+        </Container>
       );
     }
     return (
@@ -91,8 +92,7 @@ export class PostItem extends React.Component {
 }
 
 const mapStateToProps = (state, props) => ({
-  auth: state.auth,
-  post: state.posts.find(post => post._id === props.match.params.id) || null
+  post: state.posts.list.find(post => post.id == props.match.params.id) || null
 });
 
 export default connect(
