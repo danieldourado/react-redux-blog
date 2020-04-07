@@ -44,7 +44,7 @@ const PostCard = props => {
 
   return (
     <Grid item key={post.id} xs={12} sm={6} md={4}>
-      <CardActionArea component={RouterLink} to={`/posts/${post.id}`}>
+      <CardActionArea component={RouterLink} to={`/posts/${post.id+"/"+post.slug}`}>
         <Card className={classes.card}>
         <CardHeader
         avatar={

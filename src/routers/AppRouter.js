@@ -11,7 +11,7 @@ const AppRouter = () => (
   <Router history={history}>
     <Switch>
       <Route path="/" exact component={BlogDashboardPage} />
-      <Route path="/posts/:id" exact component={PostItem} />
+      <Route path="/posts/:id/:slug" exact component={PostItem} />
     </Switch>
   </Router>
 );
