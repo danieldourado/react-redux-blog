@@ -12,6 +12,8 @@ import CardHeader from '@material-ui/core/CardHeader'
 import Paper from '@material-ui/core/Paper'
 import Typography from '@material-ui/core/Typography';
 import LinearProgress from '@material-ui/core/LinearProgress';
+import {Helmet} from "react-helmet";
+
 export class PostItem extends React.Component {
   constructor(props) {
     super(props);
@@ -48,6 +50,10 @@ export class PostItem extends React.Component {
     if (this.props.post) {
       return (
         <Container maxWidth="md" id="header" style={{padding:"0px", paddingTop:"16px"}}>
+          <Helmet>
+            <title>{this.props.post.name+" - "+process.env.REACT_APP_NAME}</title>
+            <meta name="description" content="Nested component" />
+          </Helmet>
           <Paper elevation={3} style={{margin:"16px"}}>
             <CardHeader
               avatar={<Avatar aria-label="recipe" src={"https://i.pravatar.cc/60?u="+this.props.post.topic_data.author}/>}

@@ -11,7 +11,7 @@ ReactDOM.render((
   <Provider store={store}>
     <MuiThemeProvider theme={theme}>
       <CssBaseline />
-      <MetaValues/>
+      <MetaValues />
         <AppRouter />
       </MuiThemeProvider>
   </Provider>
