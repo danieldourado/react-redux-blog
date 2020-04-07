@@ -47,7 +47,7 @@ export class PostItem extends React.Component {
   renderPost() {
     if (this.props.post) {
       return (
-        <Container maxWidth="md" id="header" style={{padding:"32px"}}>
+        <Container maxWidth="md" id="header" style={{padding:"0px", paddingTop:"16px"}}>
           <Paper elevation={3} style={{margin:"16px"}}>
             <CardHeader
               avatar={<Avatar aria-label="recipe" src={"https://i.pravatar.cc/60?u="+this.props.post.topic_data.author}/>}
