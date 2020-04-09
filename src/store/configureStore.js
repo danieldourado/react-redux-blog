@@ -3,11 +3,13 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from 'redux-devtools-extension/developmentOnly';
 
 import postsReducer from "../reducers/posts";
+import categoriesReducer from "../reducers/categories";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 const reducers = combineReducers({
   posts: postsReducer,
+  categories: categoriesReducer,
 });
 
 const store = createStore(reducers, composeWithDevTools(applyMiddleware(thunk)));

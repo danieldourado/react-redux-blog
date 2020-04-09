@@ -1,20 +1,17 @@
 import axios from "axios";
 
-export const setPosts = (posts, page) => ({
+export const setPosts = (posts, subreddit, page) => ({
   type: "SET_POSTS",
+  posts:posts,
+  subreddit:subreddit,
   page: page,
-  posts:posts
 });
 
-export const startSetPosts = (page = 1) => {
+export const startSetPosts = (subreddit, page = 1) => {
   return async dispatch => {
-    try {
-      const url = `${process.env.REACT_APP_API_URL+"?page="+page}`
-      console.log(url)
+      const url = `${process.env.REACT_APP_API_URL+"subreddit/"+subreddit+"?page="+page}`
+      console.log(subreddit, page, url)
       const response = await axios.get(url);
-      dispatch(setPosts(response.data.results, page));
-    } catch (e) {
-      throw new Error("Could not retrieve posts...");
-    }
+      dispatch(setPosts(response.data.results, subreddit, page));
   };
 };

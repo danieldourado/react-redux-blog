@@ -3,8 +3,7 @@ import { connect } from 'react-redux';
 import { startSetPosts } from '../actions/posts';
 import PostCard from './PostCard'
 import Container from '@material-ui/core/Container'
-import LinearProgress from '@material-ui/core/LinearProgress';
-
+import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
 
 export class PostsList extends React.Component {
@@ -18,14 +17,12 @@ export class PostsList extends React.Component {
     this.trackScrolling = this.trackScrolling.bind(this)
   }
   async componentDidMount() {
-    try {
-      if (!this.props.posts.list) {
-        await this.props.startSetPosts();
+    console.log('component mount')
+      if (!(this.props.posts && this.props.posts[this.props.match.params.category])) {
+        await this.props.startSetPosts(this.props.match.params.category);
       }
-    } catch (e) {
-      this.setState({ error: e.message });
-    }
   }
+
   
   componentWillUpdate(){
     document.addEventListener('scroll', this.trackScrolling);
@@ -54,21 +51,33 @@ export class PostsList extends React.Component {
         </p>
       );
     } else {
+      if (!(this.props.posts && this.props.posts[this.props.match.params.category])) {
+        this.props.startSetPosts(this.props.match.params.category);
+      }
       return (
-        <LinearProgress/>
+        <div className="loader-container">
+          <p className="text-monospace loading-text text-center">
+            Fetching posts...
+          </p>
+          <p className="text-monospace loading-text text-center">
+            Please wait...
+          </p>
+        </div>
       );
     }
   };
+  
   renderThumbnail(post) {
     if (post.topic_data.thumbnail) {
       return <img src={post.topic_data.thumbnail} alt="" className="img-fluid" />;
     }
   }
   render() {
+    
     return (
       <Container style={{paddingTop:"32px"}} maxWidth="md" id="header">
         <Grid container spacing={4}>
-          {this.props.posts.length >= 2 ? this.props.posts.map(post => (
+          {this.props.posts && this.props.posts[this.props.match.params.category] ? this.props.posts[this.props.match.params.category].map(post => (
               <PostCard post={post} key={post.id} />
             )
           ): this.handleFetchStatus()}
@@ -78,13 +87,12 @@ export class PostsList extends React.Component {
   }
 }
 
-const mapStateToProps = state => ({
-  posts: state.posts.list,
-  currentPage: state.posts.currentPage
+const mapStateToProps = (state, props) => ({
+  posts: state.posts,
 });
 
 const mapDispatchToProps = dispatch => ({
-  startSetPosts: (page) => dispatch(startSetPosts(page))
+  startSetPosts: (category, page) => dispatch(startSetPosts(category, page))
   
 });
 
