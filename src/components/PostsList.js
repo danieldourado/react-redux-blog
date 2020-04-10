@@ -5,6 +5,7 @@ import PostCard from './PostCard'
 import Container from '@material-ui/core/Container'
 import CircularProgress from '@material-ui/core/CircularProgress';
 import Grid from '@material-ui/core/Grid';
+import {Helmet} from "react-helmet";
 
 export class PostsList extends React.Component {
   constructor(props) {
@@ -62,6 +63,10 @@ export class PostsList extends React.Component {
     
     return (
       <Container style={{paddingTop:"32px"}} maxWidth="md" id="header">
+        <Helmet>
+          <title>{this.props.match.params.category+" - "+process.env.REACT_APP_NAME}</title>
+          <meta name="description" content="Nested component" />
+        </Helmet>
         <Grid container spacing={4}>
           {this.props.posts && this.props.posts[this.props.match.params.category] ? this.props.posts[this.props.match.params.category].map(post => (
               <PostCard post={post} key={post.id} category={this.props.match.params.category} />
