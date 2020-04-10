@@ -1,4 +1,4 @@
-const categoriesReducer = (state = [], action) => {
+const categoriesReducer = (state = null, action) => {
   switch (action.type) {
     case "SET_CATEGORIES":
       return action.categories

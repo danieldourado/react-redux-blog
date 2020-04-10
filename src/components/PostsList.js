@@ -13,18 +13,15 @@ export class PostsList extends React.Component {
     this.state = {
       error: ''
     };
-    
     this.trackScrolling = this.trackScrolling.bind(this)
   }
-  async componentDidMount() {
-    console.log('component mount')
+  async fetchData() {
       if (!(this.props.posts && this.props.posts[this.props.match.params.category])) {
         await this.props.startSetPosts(this.props.match.params.category);
       }
   }
-
   
-  componentWillUpdate(){
+  UNSAFE_componentWillUpdate(){
     document.addEventListener('scroll', this.trackScrolling);
   }
   
@@ -37,8 +34,9 @@ export class PostsList extends React.Component {
     const ammount = wrappedElement.getBoundingClientRect().bottom*0.5
     if (ammount <= window.innerHeight) 
     {
+      
       document.removeEventListener('scroll', this.trackScrolling);
-      await this.props.startSetPosts(this.props.currentPage+1);
+      await this.props.startSetPosts(this.props.match.params.category, this.props.posts[this.props.match.params.category].length/10+1);
     }
   };
   
@@ -51,34 +49,22 @@ export class PostsList extends React.Component {
         </p>
       );
     } else {
-      if (!(this.props.posts && this.props.posts[this.props.match.params.category])) {
-        this.props.startSetPosts(this.props.match.params.category);
-      }
+      this.fetchData()
       return (
-        <div className="loader-container">
-          <p className="text-monospace loading-text text-center">
-            Fetching posts...
-          </p>
-          <p className="text-monospace loading-text text-center">
-            Please wait...
-          </p>
-        </div>
+        <Container>
+          <CircularProgress />
+        </Container>
       );
     }
   };
   
-  renderThumbnail(post) {
-    if (post.topic_data.thumbnail) {
-      return <img src={post.topic_data.thumbnail} alt="" className="img-fluid" />;
-    }
-  }
   render() {
     
     return (
       <Container style={{paddingTop:"32px"}} maxWidth="md" id="header">
         <Grid container spacing={4}>
           {this.props.posts && this.props.posts[this.props.match.params.category] ? this.props.posts[this.props.match.params.category].map(post => (
-              <PostCard post={post} key={post.id} />
+              <PostCard post={post} key={post.id} category={this.props.match.params.category} />
             )
           ): this.handleFetchStatus()}
         </Grid>

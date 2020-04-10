@@ -40,11 +40,11 @@ function kFormatter(num) {
 
 const PostCard = props => {
   const classes = useStyles();
-  const post = props.post;
+  const { post, category } = props;
 
   return (
     <Grid item key={post.id} xs={12} sm={6} md={4}>
-      <CardActionArea component={RouterLink} to={`/posts/${post.id+"/"+post.slug}`}>
+      <CardActionArea component={RouterLink} to={"/"+category+"/"+post.id+"/"+post.slug}>
         <Card className={classes.card}>
         <CardHeader
         avatar={
@@ -56,7 +56,7 @@ const PostCard = props => {
             {renderThumbnail(post)}
           <CardContent className={classes.cardContent}>
             <Typography variant="body2" color="textSecondary" component="p">
-              {post.name.substring(0, 120) + '...'}
+              {post.name.substring(0, 160) + '...'}
             </Typography>
           </CardContent>
         </Card>

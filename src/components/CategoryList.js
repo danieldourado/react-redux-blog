@@ -1,10 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { startSetCategories } from '../actions/categories';
-import Container from '@material-ui/core/Container'
-import Button from '@material-ui/core/Button';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
 import SimpleMenu from './SimpleMenu'
 
 export class CategoryList extends React.Component {
@@ -17,7 +13,7 @@ export class CategoryList extends React.Component {
   }
   async componentDidMount() {
     try {
-      if (!this.props.categories.list) {
+      if (!this.props.categories) {
         await this.props.startSetCategories();
       }
     } catch (e) {
@@ -28,8 +24,8 @@ export class CategoryList extends React.Component {
   render() {
     return (
     <nav style={{display:"flex"}}>
-      {this.props.categories.length >=1 ? this.props.categories.map(category => (
-        <SimpleMenu category={category} />
+      {this.props.categories ? this.props.categories.map(category => (
+        <SimpleMenu category={category} key={category.id}/>
         )
       ): null}
     </nav>

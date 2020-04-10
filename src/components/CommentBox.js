@@ -10,7 +10,7 @@ const renderComments = (props) => {
   if (props.comments.length > 0) {
     return sortCommentsByDate(props.comments).map(comment => {
       return (
-        <Container style={{overflow: "hidden", textOverflow: "ellipsis"}}>
+        <Container key={comment.id} style={{overflow: "hidden", textOverflow: "ellipsis"}}>
           <CardHeader style={{paddingBottom:"0px"}} 
             avatar={<Avatar aria-label="recipe" src={"https://i.pravatar.cc/60?u="+comment.author}/>}
             title={comment.author+" "+moment.unix(comment.created_utc).format("MMMM YYYY")}

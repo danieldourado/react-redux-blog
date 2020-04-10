@@ -1,4 +1,4 @@
-import axios from "axios";
+import agent from "../agent";
 
 export const setCategories = (categories) => ({
   type: "SET_CATEGORIES",
@@ -7,13 +7,7 @@ export const setCategories = (categories) => ({
 
 export const startSetCategories = () => {
   return async dispatch => {
-    try {
-      const url = `${process.env.REACT_APP_API_URL+"category/"}`
-      console.log("fetching url from action categories", url)
-      const response = await axios.get(url);
-      dispatch(setCategories(response.data.results));
-    } catch (e) {
-      throw new Error("Could not retrieve categories...");
-    }
+    const response = await agent.Categories.get();
+    dispatch(setCategories(response));
   };
 };
